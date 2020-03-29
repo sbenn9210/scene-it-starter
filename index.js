@@ -1,4 +1,4 @@
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('search-form').addEventListener('submit', function(e){
     e.preventDefault()
 
@@ -12,6 +12,7 @@ let input = document.getElementById('search-input')
    moviesContainer.innerHTML = renderMovies(movieData, e.target.value.toUpperCase())
  })
 
+ 
 function renderMovies (movieArray, selectedMovie) {
   
    let finalHTML = movieArray.map(currentMovie => {
@@ -23,11 +24,12 @@ function renderMovies (movieArray, selectedMovie) {
       <div class="card-body">
         <h5 class="card-title">${currentMovie.Title}</h5>
         <p class="card-text">${currentMovie.Year}</p>
-        <a href="#" class="btn btn-primary">Add</a>
+        <div><a href="#" class="btn btn-primary" onclick='saveToWatchlist("${currentMovie.imdbID}")'>Add!</a></div>
       </div>
     </div>
       `
      } 
+     
       
   })
   
@@ -35,4 +37,22 @@ function renderMovies (movieArray, selectedMovie) {
   
 }
 
+
+
 })
+
+
+function saveToWatchlist (imdbID) {
+  let movie = movieData.find(function(currentMovie) {
+    return currentMovie.imdbID == imdbID
+  })
+  let watchlistJSON = localStorage.getItem('watchlist')
+  let watchlist = JSON.parse(watchlistJSON)
+  if (watchlist === null) {
+    watchlist = []
+  }
+  watchlist.push(movie)
+    watchlistJSON = JSON.stringify(watchlist);
+    localStorage.setItem('watchlist', watchlistJSON)
+
+}
