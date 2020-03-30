@@ -1,23 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('search-form').addEventListener('submit', function(e){
     e.preventDefault()
+    var searchString = document.getElementById('search-input').value
+    var urlEncodedSearchString = encodeURIComponent(searchString)
 
+    axios.get( "http://www.omdbapi.com/?apikey=1af42991&s=" + urlEncodedSearchString).then(function(response) {
+      moviesContainer.innerHTML = renderMovies(response.data.Search)
+    })
   })
 
 let moviesContainer = document.querySelector('.movies-container')
 
 let input = document.getElementById('search-input')
- input.addEventListener('input', function(e) {
-
-   moviesContainer.innerHTML = renderMovies(movieData, e.target.value.toUpperCase())
- })
-
  
-function renderMovies (movieArray, selectedMovie) {
+function renderMovies (movieArray) {
   
    let finalHTML = movieArray.map(currentMovie => {
-     if (currentMovie.Title.toUpperCase().indexOf(selectedMovie) > -1) {
-      
       return  `
       <div class="mr-5 mb-2 card movie" style="width: 18rem;">
       <img class="card-img-top" src=${currentMovie.Poster} alt="Card image cap">
@@ -28,7 +26,7 @@ function renderMovies (movieArray, selectedMovie) {
       </div>
     </div>
       `
-     } 
+     
      
       
   })
